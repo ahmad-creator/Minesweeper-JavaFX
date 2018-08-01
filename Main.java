@@ -1,0 +1,251 @@
+package application;
+
+import java.util.ArrayList;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+
+public class Main extends Application {
+
+	static int bombPercent = 10;
+	static int gridSize = 20;
+	static int numBombs, foundBombs;
+	private static Tile[][] grid = new Tile[gridSize][gridSize];
+	private static Stage main;
+	private static VBox vbox = new VBox();
+
+	@Override
+	public void start(Stage stage) {
+
+		main = stage;
+		main.setTitle("Minesweeper - By Robert Sanders");
+
+		MenuBar menuBar = new MenuBar();
+
+		Menu menuFile = new Menu("File");
+		MenuItem about = new MenuItem("About");
+		about.setOnAction(e -> {
+			Alert aboutAlert = new Alert(Alert.AlertType.INFORMATION,
+					"Created by Robert Sanders. \n" + "sanry030@mymail.unisa.edu.au \n" + "v 0.2", ButtonType.CLOSE);
+			aboutAlert.setTitle("About");
+			aboutAlert.setHeaderText("Minesweeper");
+			aboutAlert.showAndWait();
+		});
+		MenuItem help = new MenuItem("Help");
+		help.setOnAction(e -> {
+			Alert helpAlert = new Alert(Alert.AlertType.INFORMATION,
+					"The aim of minesweeper is to identify all sqaures which contain mines.\n\n"
+							+ "Left click on a square to reveal a number.\n"
+							+ "This number indicates how many of the adjacent squares contain mines. \n"
+							+ "By using these numbers you can deduce which sqaures contain mines. \n\n"
+							+ "Right click on a square to mark it as containing a mine. Right click the sqaure again to unmark it if you made a mistake.\n"
+							+ "After all mines have successfully been marked the game is over and you win!\n"
+							+ "Be careful through. Left clicking a square with a mine will result in a game over.");
+			helpAlert.setTitle("Help");
+			helpAlert.setHeaderText("How to play.");
+			helpAlert.showAndWait();
+		});
+		MenuItem quit = new MenuItem("Quit");
+		quit.setOnAction(e -> {
+			Platform.exit();
+		});
+		menuFile.getItems().addAll(about, help, quit);
+
+		Menu menuSize = new Menu("Size");
+		MenuItem ten = new MenuItem("10x10");
+		ten.setOnAction(e -> {
+			gridSize = 10;
+			reload();
+		});
+		MenuItem fifteen = new MenuItem("15x15");
+		fifteen.setOnAction(e -> {
+			gridSize = 15;
+			reload();
+		});
+		MenuItem twenty = new MenuItem("20x20");
+		twenty.setOnAction(e -> {
+			gridSize = 20;
+			reload();
+		});
+		menuSize.getItems().addAll(ten, fifteen, twenty);
+
+		Menu menuDifficulty = new Menu("Difficulty");
+		MenuItem easy = new MenuItem("Easy - 10% Bombs");
+		easy.setOnAction(e -> {
+			bombPercent = 10;
+			reload();
+		});
+		MenuItem medium = new MenuItem("Medium - 15% Bombs");
+		medium.setOnAction(e -> {
+			bombPercent = 15;
+			reload();
+		});
+		MenuItem hard = new MenuItem("Hard - 20% Bombs");
+		hard.setOnAction(e -> {
+			bombPercent = 20;
+			reload();
+		});
+		menuDifficulty.getItems().addAll(easy, medium, hard);
+
+		menuBar.getMenus().addAll(menuFile, menuSize, menuDifficulty);
+
+		vbox.getChildren().addAll(menuBar, createContent());
+
+		Scene scene = new Scene(vbox);
+
+		scene.getStylesheets().add("application/application.css");
+		main.setScene(scene);
+		main.setResizable(false);
+		main.sizeToScene();
+		main.show();
+	}
+
+	private static void reload() {
+		vbox.getChildren().remove(1);
+		main.setResizable(true);
+		vbox.getChildren().add(createContent());
+		main.sizeToScene();
+	}
+
+	/**
+	 * Create all the tiles and assign bombs accordingly
+	 * 
+	 * @return root - The playing field 
+	 */
+	private static Parent createContent() {
+
+		// Reset to zero in case of new game.
+		numBombs = 0;
+		foundBombs = 0;
+
+		Pane root = new Pane();
+		root.setPrefSize(gridSize * 40, gridSize * 40);
+
+		// Create all tile and buttons on the grid assign tiles to be bombs based on
+		// percentage
+		for (int y = 0; y < gridSize; y++) {
+			for (int x = 0; x < gridSize; x++) {
+
+				Tile tile = new Tile(x, y, Math.random() < (double) bombPercent / 100);
+
+				grid[x][y] = tile;
+				root.getChildren().add(tile);
+
+			}
+		}
+
+		// Add values to the tiles and set their colours accordingly.
+		for (int y = 0; y < gridSize; y++) {
+			for (int x = 0; x < gridSize; x++) {
+
+				int numNeighboursBomb = 0;
+
+				ArrayList<Tile> neighbours = new ArrayList<Tile>();
+
+				int[] neighboursLocs = new int[] { -1, -1, -1, 0, -1, 1, 0, -1, 0, 1, 1, -1, 1, 0, 1, 1 };
+
+				for (int i = 0; i < neighboursLocs.length; i++) {
+					int dx = neighboursLocs[i];
+					int dy = neighboursLocs[++i];
+
+					int newX = x + dx;
+					int newY = y + dy;
+
+					if (newX >= 0 && newX < gridSize && newY >= 0 && newY < gridSize) {
+						neighbours.add(grid[newX][newY]);
+						if (grid[newX][newY].hasBomb) {
+							numNeighboursBomb++;
+						}
+					}
+				}
+
+				grid[x][y].numBombs = numNeighboursBomb;
+				grid[x][y].neighbours = neighbours;
+
+				switch (numNeighboursBomb) {
+				case 1:
+					grid[x][y].color = Color.BLUE;
+					break;
+				case 2:
+					grid[x][y].color = Color.GREEN;
+					break;
+				case 3:
+					grid[x][y].color = Color.RED;
+					break;
+				case 4:
+					grid[x][y].color = Color.DARKBLUE;
+					break;
+				case 5:
+					grid[x][y].color = Color.DARKRED;
+					break;
+				case 6:
+					grid[x][y].color = Color.CYAN;
+					break;
+				case 7:
+					grid[x][y].color = Color.BLACK;
+					break;
+				case 8:
+					grid[x][y].color = Color.DARKGREY;
+					break;
+				}
+			}
+		}
+		return root;
+	}
+
+	/**
+	 * Runs when a player left clicks a bomb. Reveals all bomb tiles and displays
+	 * message. Calls to reload the game.
+	 */
+	public static void gameOver() {
+
+		for (int y = 0; y < gridSize; y++) {
+			for (int x = 0; x < gridSize; x++) {
+				if (grid[x][y].hasBomb) {
+					grid[x][y].text.setVisible(true);
+					grid[x][y].text.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 20));
+					grid[x][y].text.setText("X");
+				}
+			}
+		}
+
+		Alert gameOver = new Alert(AlertType.INFORMATION);
+		gameOver.setTitle("Game Over!");
+		gameOver.setHeaderText("Bomb Exploded!");
+		gameOver.setContentText(
+				"Oh no! You clicked on a bomb and caused all the bombs to explode! Better luck next time.");
+		gameOver.showAndWait();
+		reload();
+	}
+
+	/**
+	 * Player win. Displays message. Calls to reload the game.
+	 */
+	public static void win() {
+		Alert win = new Alert(AlertType.CONFIRMATION);
+		win.setTitle("Win!");
+		win.setHeaderText("Congratulations!");
+		win.setContentText("You found all the bombs.");
+		win.showAndWait();
+		reload();
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+}
