@@ -8,16 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 
 class Tile extends StackPane {
 
 	Button btn = new Button();
 	int x, y = 0;
 	boolean hasBomb;
-	Text text = new Text();
 	int numBombs = 0;
 	Color color = null;
 	boolean flagged = false;
@@ -40,7 +36,7 @@ class Tile extends StackPane {
 			onClick(e);
 		});
 
-		getChildren().addAll(btn, text);
+		getChildren().addAll(btn);
 
 		setTranslateX(x * 40);
 		setTranslateY(y * 40);
@@ -64,9 +60,8 @@ class Tile extends StackPane {
 				if (this.numBombs == 0) {
 					blankClick(this);
 				} else {
-					text.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 20));
-					text.setText(Integer.toString(numBombs));
-					text.setFill(color);
+					btn.setText(Integer.toString(numBombs));
+					btn.setTextFill(color);
 				}
 			}
 			}
@@ -75,8 +70,8 @@ class Tile extends StackPane {
 		else {
 			if (flagged == false) {
 				flagged = true;
-				text.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 10));
-				text.setText("FLAG");
+				btn.setId("flagBtn");
+				btn.setText("FLAG");
 				if (this.hasBomb) {
 					Main.foundBombs++;
 					if (Main.foundBombs == Main.numBombs) {
@@ -84,10 +79,11 @@ class Tile extends StackPane {
 					}
 				}
 			} else {
+				btn.setId(null);
 				if (hasBomb) {
 					Main.foundBombs--;
 				}
-				text.setText("");
+				btn.setText(null);
 				flagged = false;
 			}
 		}
@@ -97,11 +93,9 @@ class Tile extends StackPane {
 
 		for (int i = 0; i < tile.neighbours.size(); i++) {
 			if (tile.neighbours.get(i).active) {
-				tile.neighbours.get(i).btn.setBackground(null);
 				tile.neighbours.get(i).btn.setDisable(true);
-				tile.neighbours.get(i).text.setText(Integer.toString(tile.neighbours.get(i).numBombs));
-				tile.neighbours.get(i).text.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 20));
-				tile.neighbours.get(i).text.setFill(tile.neighbours.get(i).color);
+				tile.neighbours.get(i).btn.setText(Integer.toString(tile.neighbours.get(i).numBombs));
+				tile.neighbours.get(i).btn.setTextFill(tile.neighbours.get(i).color);
 				tile.neighbours.get(i).active = false;
 				if (tile.neighbours.get(i).numBombs == 0) {
 					blankClick(tile.neighbours.get(i));

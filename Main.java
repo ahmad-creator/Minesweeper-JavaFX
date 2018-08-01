@@ -18,8 +18,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 public class Main extends Application {
 
@@ -56,7 +54,7 @@ public class Main extends Application {
 		MenuItem about = new MenuItem("About");
 		about.setOnAction(e -> {
 			Alert aboutAlert = new Alert(Alert.AlertType.INFORMATION,
-					"Created by Robert Sanders. \n" + "sanry030@mymail.unisa.edu.au \n" + "v 0.2", ButtonType.CLOSE);
+					"Created by Robert Sanders. \n" + "sanry030@mymail.unisa.edu.au \n" + "v 1.0", ButtonType.CLOSE);
 			aboutAlert.setTitle("About");
 			aboutAlert.setHeaderText("Minesweeper");
 			aboutAlert.showAndWait();
@@ -240,9 +238,8 @@ public class Main extends Application {
 		for (int y = 0; y < gridSize; y++) {
 			for (int x = 0; x < gridSize; x++) {
 				if (grid[x][y].hasBomb) {
-					grid[x][y].text.setVisible(true);
-					grid[x][y].text.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 20));
-					grid[x][y].text.setText("X");
+					grid[x][y].btn.setText("X");
+					grid[x][y].btn.setId(null);
 				}
 			}
 		}
