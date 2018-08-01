@@ -1,6 +1,8 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -22,14 +24,28 @@ import javafx.scene.text.FontWeight;
 public class Main extends Application {
 
 	static int bombPercent = 10;
-	static int gridSize = 20;
+	static int gridSize = 10;
 	static int numBombs, foundBombs;
-	private static Tile[][] grid = new Tile[gridSize][gridSize];
+	private static Tile[][] grid = new Tile[100][100];
 	private static Stage main;
 	private static VBox vbox = new VBox();
 
+	static int secondsPassed;
+
+	public static Timer timer;
+
 	@Override
 	public void start(Stage stage) {
+
+		TimerTask task = new TimerTask() {
+			public void run() {
+				secondsPassed++;
+			}
+		};
+		
+		timer = new Timer();
+
+		timer.scheduleAtFixedRate(task, 1000, 1000);
 
 		main = stage;
 		main.setTitle("Minesweeper - By Robert Sanders");
@@ -48,13 +64,10 @@ public class Main extends Application {
 		MenuItem help = new MenuItem("Help");
 		help.setOnAction(e -> {
 			Alert helpAlert = new Alert(Alert.AlertType.INFORMATION,
-					"The aim of minesweeper is to identify all sqaures which contain mines.\n\n"
-							+ "Left click on a square to reveal a number.\n"
-							+ "This number indicates how many of the adjacent squares contain mines. \n"
-							+ "By using these numbers you can deduce which sqaures contain mines. \n\n"
-							+ "Right click on a square to mark it as containing a mine. Right click the sqaure again to unmark it if you made a mistake.\n"
-							+ "After all mines have successfully been marked the game is over and you win!\n"
-							+ "Be careful through. Left clicking a square with a mine will result in a game over.");
+					"The aim of minesweeper is to identify all the sqaures which contain mines.\n\n"
+							+ "Left click on a square to reveal a number. This number indicates how many of the adjacent squares contain mines. By using these numbers you can deduce which sqaures contain mines. \n\n"
+							+ "Right click on a square to mark it as containing a mine. You can right click the sqaure again to unmark it if you made a mistake.\n\n"
+							+ "After all mines have successfully been marked the game is over and you win! Be careful though. Left clicking a square with a mine will result in a game over.");
 			helpAlert.setTitle("Help");
 			helpAlert.setHeaderText("How to play.");
 			helpAlert.showAndWait();
@@ -115,8 +128,19 @@ public class Main extends Application {
 	}
 
 	private static void reload() {
+		
+		secondsPassed = 0;
+
+		TimerTask task = new TimerTask() {
+			public void run() {
+				secondsPassed++;
+			};
+		};
+		timer.cancel();
+		timer = new Timer();
+		timer.schedule(task, 1000, 1000);
+
 		vbox.getChildren().remove(1);
-		main.setResizable(true);
 		vbox.getChildren().add(createContent());
 		main.sizeToScene();
 	}
@@ -124,7 +148,7 @@ public class Main extends Application {
 	/**
 	 * Create all the tiles and assign bombs accordingly
 	 * 
-	 * @return root - The playing field 
+	 * @return root - The playing field
 	 */
 	private static Parent createContent() {
 
@@ -239,7 +263,7 @@ public class Main extends Application {
 		Alert win = new Alert(AlertType.CONFIRMATION);
 		win.setTitle("Win!");
 		win.setHeaderText("Congratulations!");
-		win.setContentText("You found all the bombs.");
+		win.setContentText("You found all the bombs in " + secondsPassed + " seconds.");
 		win.showAndWait();
 		reload();
 	}

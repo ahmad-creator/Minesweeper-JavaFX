@@ -51,7 +51,6 @@ class Tile extends StackPane {
 
 		// Left Click
 		if (e.getButton() == MouseButton.PRIMARY) {
-			
 			if(!flagged) {
 
 			btn.setBackground(null);
