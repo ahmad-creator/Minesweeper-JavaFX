@@ -20,6 +20,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class Main extends Application {
+	
+	// Git test
 
 	static int bombPercent = 10;
 	static int gridSize = 10;
