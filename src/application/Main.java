@@ -20,22 +20,23 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class Main extends Application {
-	
-	// Git test
 
-	static int bombPercent = 10;
-	static int gridSize = 10;
-	static int numBombs, foundBombs;
-	private static Tile[][] grid = new Tile[100][100];
+	private static int bombPercent = 10;
+	private static int gridSize = 10;
+	private static Tile[][] grid;
 	private static Stage main;
 	private static VBox vbox = new VBox();
+	
+	static int numBombs, foundBombs;
 
-	static int secondsPassed;
+	private static int secondsPassed;
 
 	public static Timer timer;
 
 	@Override
 	public void start(Stage stage) {
+		
+		grid = new Tile[gridSize][gridSize];
 
 		TimerTask task = new TimerTask() {
 			public void run() {
@@ -128,6 +129,8 @@ public class Main extends Application {
 	}
 
 	private static void reload() {
+		
+		grid = new Tile[gridSize][gridSize];
 		
 		secondsPassed = 0;
 
