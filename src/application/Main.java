@@ -15,6 +15,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -239,11 +241,14 @@ public class Main extends Application {
 	 * message. Calls to reload the game.
 	 */
 	public static void gameOver() {
+		
+		Image mine = new Image("application/mine.png");
 
 		for (int y = 0; y < gridSize; y++) {
 			for (int x = 0; x < gridSize; x++) {
 				if (grid[x][y].hasBomb) {
-					grid[x][y].btn.setText("X");
+					grid[x][y].btn.setGraphic(new ImageView(mine));
+					grid[x][y].btn.setDisable(true);
 					grid[x][y].btn.setId(null);
 				}
 			}

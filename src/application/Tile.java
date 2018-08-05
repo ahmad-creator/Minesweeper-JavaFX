@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -44,6 +46,8 @@ class Tile extends StackPane {
 	}
 
 	private void onClick(MouseEvent e) {
+		
+		Image flag = new Image("application/flag.png");
 
 		// Left Click
 		if (e.getButton() == MouseButton.PRIMARY) {
@@ -68,10 +72,10 @@ class Tile extends StackPane {
 		}
 		// Right Click
 		else {
-			if (flagged == false) {
+			if (!flagged) {
 				flagged = true;
 				btn.setId("flagBtn");
-				btn.setText("FLAG");
+				btn.setGraphic(new ImageView(flag));
 				if (this.hasBomb) {
 					Main.foundBombs++;
 					if (Main.foundBombs == Main.numBombs) {
@@ -83,7 +87,7 @@ class Tile extends StackPane {
 				if (hasBomb) {
 					Main.foundBombs--;
 				}
-				btn.setText(null);
+				btn.setGraphic(null);
 				flagged = false;
 			}
 		}
