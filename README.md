@@ -5,6 +5,5 @@ Basic minesweeper game built with JavaFX. Features ability to change grid size, 
 
 Planned features:
   - Bomb exploding sound
-  - Images for mines and flag
   - Keyboard control
   - Highscore to keep track of fastest times
