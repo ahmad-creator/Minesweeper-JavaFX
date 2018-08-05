@@ -249,7 +249,6 @@ public class Main extends Application {
 				if (grid[x][y].hasBomb) {
 					grid[x][y].btn.setGraphic(new ImageView(mine));
 					grid[x][y].btn.setDisable(true);
-					grid[x][y].btn.setId(null);
 				}
 			}
 		}

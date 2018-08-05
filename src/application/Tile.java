@@ -21,6 +21,8 @@ class Tile extends StackPane {
 	boolean flagged = false;
 	ArrayList<Tile> neighbours = new ArrayList<Tile>();
 	boolean active = true;
+	
+	Image flag = new Image("application/flag.png");
 
 	public Tile(int x, int y, boolean hasBomb) {
 		this.x = x;
@@ -46,8 +48,6 @@ class Tile extends StackPane {
 	}
 
 	private void onClick(MouseEvent e) {
-		
-		Image flag = new Image("application/flag.png");
 
 		// Left Click
 		if (e.getButton() == MouseButton.PRIMARY) {
@@ -74,7 +74,6 @@ class Tile extends StackPane {
 		else {
 			if (!flagged) {
 				flagged = true;
-				btn.setId("flagBtn");
 				btn.setGraphic(new ImageView(flag));
 				if (this.hasBomb) {
 					Main.foundBombs++;
@@ -83,7 +82,6 @@ class Tile extends StackPane {
 					}
 				}
 			} else {
-				btn.setId(null);
 				if (hasBomb) {
 					Main.foundBombs--;
 				}
@@ -98,6 +96,7 @@ class Tile extends StackPane {
 		for (int i = 0; i < tile.neighbours.size(); i++) {
 			if (tile.neighbours.get(i).active) {
 				tile.neighbours.get(i).btn.setDisable(true);
+				tile.neighbours.get(i).btn.setGraphic(null);
 				tile.neighbours.get(i).btn.setText(Integer.toString(tile.neighbours.get(i).numBombs));
 				tile.neighbours.get(i).btn.setTextFill(tile.neighbours.get(i).color);
 				tile.neighbours.get(i).active = false;
