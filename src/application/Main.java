@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,6 +20,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 public class Main extends Application {
@@ -252,6 +255,10 @@ public class Main extends Application {
 				}
 			}
 		}
+		
+		Media explosionSound = new Media(new File("src/application/explosion.mp3").toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(explosionSound);
+		mediaPlayer.play();
 
 		Alert gameOver = new Alert(AlertType.INFORMATION);
 		gameOver.setTitle("Game Over!");
@@ -266,6 +273,11 @@ public class Main extends Application {
 	 * Player win. Displays message. Calls to reload the game.
 	 */
 	public static void win() {
+		
+		Media explosionSound = new Media(new File("src/application/win.mp3").toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(explosionSound);
+		mediaPlayer.play();
+		
 		Alert win = new Alert(AlertType.CONFIRMATION);
 		win.setTitle("Win!");
 		win.setHeaderText("Congratulations!");
