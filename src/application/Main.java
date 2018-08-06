@@ -21,6 +21,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 public class Main extends Application {
@@ -37,8 +39,6 @@ public class Main extends Application {
 
 	public static Timer timer;
 	
-	static AudioClip explosionSound = new AudioClip(new File("explosion.mp3").toURI().toString());
-	static AudioClip winSound = new AudioClip(new File("win.mp3").toURI().toString());
 
 	@Override
 	public void start(Stage stage) {
@@ -256,6 +256,9 @@ public class Main extends Application {
 	public static void gameOver() {
 
 		Image mine = new Image("application/mine.png");
+		
+		AudioClip explosionSound = new AudioClip(new File("src/application/explosion.mp3").toURI().toString());
+		explosionSound.play();
 
 		for (int y = 0; y < gridSize; y++) {
 			for (int x = 0; x < gridSize; x++) {
@@ -265,8 +268,6 @@ public class Main extends Application {
 				}
 			}
 		}
-
-		explosionSound.play();
 
 		Alert gameOver = new Alert(AlertType.INFORMATION);
 		gameOver.setTitle("Game Over!");
@@ -281,7 +282,8 @@ public class Main extends Application {
 	 * Player win. Displays message. Calls to reload the game.
 	 */
 	public static void win() {
-
+		
+		AudioClip winSound = new AudioClip(new File("src/application/win.mp3").toURI().toString());
 		winSound.play();
 
 		Alert win = new Alert(AlertType.CONFIRMATION);
