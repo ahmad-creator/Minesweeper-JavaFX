@@ -2,6 +2,7 @@ package application;
 
 import javafx.scene.paint.Color;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javafx.scene.control.Button;
@@ -10,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 
 class Tile extends StackPane {
 
@@ -21,6 +23,8 @@ class Tile extends StackPane {
 	boolean flagged = false;
 	ArrayList<Tile> neighbours = new ArrayList<Tile>();
 	boolean active = true;
+	
+	AudioClip clickSound = new AudioClip(new File("click.mp3").toURI().toString());
 	
 	Image flag = new Image("application/flag.png");
 
@@ -48,6 +52,8 @@ class Tile extends StackPane {
 	}
 
 	private void onClick(MouseEvent e) {
+		
+		clickSound.play();
 
 		// Left Click
 		if (e.getButton() == MouseButton.PRIMARY) {

@@ -23,7 +23,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
-
 public class Main extends Application {
 
 	private static int bombPercent = 10;
@@ -31,16 +30,19 @@ public class Main extends Application {
 	private static Tile[][] grid;
 	private static Stage main;
 	private static VBox vbox = new VBox();
-	
+
 	static int numBombs, foundBombs;
 
 	private static int secondsPassed;
 
 	public static Timer timer;
+	
+	static AudioClip explosionSound = new AudioClip(new File("explosion.mp3").toURI().toString());
+	static AudioClip winSound = new AudioClip(new File("win.mp3").toURI().toString());
 
 	@Override
 	public void start(Stage stage) {
-		
+
 		grid = new Tile[gridSize][gridSize];
 
 		TimerTask task = new TimerTask() {
@@ -49,18 +51,18 @@ public class Main extends Application {
 				secondsPassed++;
 			}
 		};
-		
+
 		timer = new Timer();
 
 		timer.scheduleAtFixedRate(task, 1000, 1000);
 
 		main = stage;
-		
+
 		main.setOnCloseRequest(e -> {
 			Platform.exit();
 			System.exit(0);
 		});
-		
+
 		main.setTitle("Minesweeper - By Robert Sanders");
 
 		MenuBar menuBar = new MenuBar();
@@ -141,9 +143,9 @@ public class Main extends Application {
 	}
 
 	private static void reload() {
-		
+
 		grid = new Tile[gridSize][gridSize];
-		
+
 		secondsPassed = 0;
 
 		TimerTask task = new TimerTask() {
@@ -252,7 +254,7 @@ public class Main extends Application {
 	 * message. Calls to reload the game.
 	 */
 	public static void gameOver() {
-		
+
 		Image mine = new Image("application/mine.png");
 
 		for (int y = 0; y < gridSize; y++) {
@@ -263,10 +265,9 @@ public class Main extends Application {
 				}
 			}
 		}
-		
-		AudioClip explosion = new AudioClip(new File("explosion.mp3").toURI().toString());
-		explosion.play();
-		
+
+		explosionSound.play();
+
 		Alert gameOver = new Alert(AlertType.INFORMATION);
 		gameOver.setTitle("Game Over!");
 		gameOver.setHeaderText("Bomb Exploded!");
@@ -280,10 +281,9 @@ public class Main extends Application {
 	 * Player win. Displays message. Calls to reload the game.
 	 */
 	public static void win() {
-		
-		AudioClip explosion = new AudioClip(new File("win.mp3").toURI().toString());
-		explosion.play();
-		
+
+		winSound.play();
+
 		Alert win = new Alert(AlertType.CONFIRMATION);
 		win.setTitle("Win!");
 		win.setHeaderText("Congratulations!");
