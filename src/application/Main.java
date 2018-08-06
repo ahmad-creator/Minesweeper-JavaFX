@@ -62,7 +62,7 @@ public class Main extends Application {
 		MenuItem about = new MenuItem("About");
 		about.setOnAction(e -> {
 			Alert aboutAlert = new Alert(Alert.AlertType.INFORMATION,
-					"Created by Robert Sanders. \n" + "sanry030@mymail.unisa.edu.au \n" + "v 1.0", ButtonType.CLOSE);
+					"Created by Robert Sanders. \n" + "sanry030@mymail.unisa.edu.au \n" + "v 1.1.0", ButtonType.CLOSE);
 			aboutAlert.setTitle("About");
 			aboutAlert.setHeaderText("Minesweeper");
 			aboutAlert.showAndWait();
