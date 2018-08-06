@@ -20,9 +20,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+
 
 public class Main extends Application {
 
@@ -44,6 +44,7 @@ public class Main extends Application {
 		grid = new Tile[gridSize][gridSize];
 
 		TimerTask task = new TimerTask() {
+			@Override
 			public void run() {
 				secondsPassed++;
 			}
@@ -54,6 +55,12 @@ public class Main extends Application {
 		timer.scheduleAtFixedRate(task, 1000, 1000);
 
 		main = stage;
+		
+		main.setOnCloseRequest(e -> {
+			Platform.exit();
+			System.exit(0);
+		});
+		
 		main.setTitle("Minesweeper - By Robert Sanders");
 
 		MenuBar menuBar = new MenuBar();
@@ -140,6 +147,7 @@ public class Main extends Application {
 		secondsPassed = 0;
 
 		TimerTask task = new TimerTask() {
+			@Override
 			public void run() {
 				secondsPassed++;
 			};
@@ -256,10 +264,9 @@ public class Main extends Application {
 			}
 		}
 		
-		Media explosionSound = new Media(new File("src/application/explosion.mp3").toURI().toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(explosionSound);
-		mediaPlayer.play();
-
+		AudioClip explosion = new AudioClip(new File("explosion.mp3").toURI().toString());
+		explosion.play();
+		
 		Alert gameOver = new Alert(AlertType.INFORMATION);
 		gameOver.setTitle("Game Over!");
 		gameOver.setHeaderText("Bomb Exploded!");
@@ -274,9 +281,8 @@ public class Main extends Application {
 	 */
 	public static void win() {
 		
-		Media explosionSound = new Media(new File("src/application/win.mp3").toURI().toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(explosionSound);
-		mediaPlayer.play();
+		AudioClip explosion = new AudioClip(new File("win.mp3").toURI().toString());
+		explosion.play();
 		
 		Alert win = new Alert(AlertType.CONFIRMATION);
 		win.setTitle("Win!");
