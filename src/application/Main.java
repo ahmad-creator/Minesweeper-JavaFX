@@ -253,7 +253,7 @@ public class Main extends Application {
 	 */
 	public static void gameOver() {
 		if (sound) {
-			AudioClip explosion = new AudioClip(Main.class.getResource("explosion.mp3").toString());
+			AudioClip explosion = new AudioClip(Main.class.getResource("explosion.wav").toString());
 			explosion.play();
 		}
 		for (int y = 0; y < gridSize; y++) {
@@ -267,6 +267,7 @@ public class Main extends Application {
 
 		Alert gameOver = new Alert(AlertType.INFORMATION);
 		gameOver.setTitle("Game Over!");
+		gameOver.setGraphic(new ImageView(mine));
 		gameOver.setHeaderText("Bomb Exploded!");
 		gameOver.setContentText(
 				"Oh no! You clicked on a bomb and caused all the bombs to explode! Better luck next time.");
@@ -282,11 +283,12 @@ public class Main extends Application {
 	public static void win() {
 
 		if (sound) {
-			AudioClip winSound = new AudioClip(Main.class.getResource("win.mp3").toString());
+			AudioClip winSound = new AudioClip(Main.class.getResource("win.wav").toString());
 			winSound.play();
 		}
 		Alert win = new Alert(AlertType.CONFIRMATION);
 		win.setTitle("Win!");
+		win.setGraphic(new ImageView(Tile.flag));
 		win.setHeaderText("Congratulations!");
 		win.setContentText("You found all the bombs in " + secondsPassed + " seconds.");
 		win.showAndWait();

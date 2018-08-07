@@ -24,7 +24,7 @@ class Tile extends StackPane {
 	ArrayList<Tile> neighbours = new ArrayList<Tile>();
 	boolean active = true;
 	
-	Image flag = new Image("application/flag.png");
+	static Image flag = new Image("application/flag.png");
 
 	public Tile(int x, int y, boolean hasBomb) {
 		this.x = x;
@@ -52,7 +52,7 @@ class Tile extends StackPane {
 	private void onClick(MouseEvent e) {
 		
 		if (Main.sound) {
-			AudioClip click = new AudioClip(Main.class.getResource("click.mp3").toString());
+			AudioClip click = new AudioClip(Main.class.getResource("click.wav").toString());
 			click.play();
 		}
 
