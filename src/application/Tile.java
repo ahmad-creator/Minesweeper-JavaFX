@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 
 
 class Tile extends StackPane {
@@ -49,6 +50,11 @@ class Tile extends StackPane {
 	}
 
 	private void onClick(MouseEvent e) {
+		
+		if (Main.sound) {
+			AudioClip click = new AudioClip(Main.class.getResource("click.mp3").toString());
+			click.play();
+		}
 
 		// Left Click
 		if (e.getButton() == MouseButton.PRIMARY) {

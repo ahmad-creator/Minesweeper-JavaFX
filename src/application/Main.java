@@ -1,6 +1,5 @@
 package application;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,6 +15,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -37,7 +38,10 @@ public class Main extends Application {
 	private static int secondsPassed;
 
 	public static Timer timer;
-	
+
+	static Image mine = new Image("application/mine.png");
+
+	static boolean sound = true;
 
 	@Override
 	public void start(Stage stage) {
@@ -62,6 +66,7 @@ public class Main extends Application {
 			System.exit(0);
 		});
 
+		main.getIcons().add(mine);
 		main.setTitle("Minesweeper - By Robert Sanders");
 
 		MenuBar menuBar = new MenuBar();
@@ -128,7 +133,22 @@ public class Main extends Application {
 		});
 		menuDifficulty.getItems().addAll(easy, medium, hard);
 
-		menuBar.getMenus().addAll(menuFile, menuSize, menuDifficulty);
+		Menu menuSound = new Menu("Sound");
+		RadioMenuItem soundOn = new RadioMenuItem("On");
+		soundOn.setOnAction(e -> {
+			sound = true;
+		});
+		RadioMenuItem soundOff = new RadioMenuItem("Off");
+		soundOff.setOnAction(e -> {
+			sound = false;
+		});
+		ToggleGroup soundToggle = new ToggleGroup();
+		soundToggle.getToggles().addAll(soundOn, soundOff);
+		soundToggle.selectToggle(soundOn);
+
+		menuSound.getItems().addAll(soundOn, soundOff);
+
+		menuBar.getMenus().addAll(menuFile, menuSize, menuDifficulty, menuSound);
 
 		vbox.getChildren().addAll(menuBar, createContent());
 
@@ -217,32 +237,11 @@ public class Main extends Application {
 				grid[x][y].numBombs = numNeighboursBomb;
 				grid[x][y].neighbours = neighbours;
 
-				switch (numNeighboursBomb) {
-				case 1:
-					grid[x][y].color = Color.BLUE;
-					break;
-				case 2:
-					grid[x][y].color = Color.GREEN;
-					break;
-				case 3:
-					grid[x][y].color = Color.RED;
-					break;
-				case 4:
-					grid[x][y].color = Color.DARKBLUE;
-					break;
-				case 5:
-					grid[x][y].color = Color.DARKRED;
-					break;
-				case 6:
-					grid[x][y].color = Color.CYAN;
-					break;
-				case 7:
-					grid[x][y].color = Color.BLACK;
-					break;
-				case 8:
-					grid[x][y].color = Color.DARKGREY;
-					break;
-				}
+				Color[] colors = { null, Color.BLUE, Color.GREEN, Color.RED, Color.DARKBLUE, Color.DARKRED, Color.CYAN,
+						Color.BLACK, Color.DARKGRAY };
+
+				grid[x][y].color = colors[grid[x][y].numBombs];
+
 			}
 		}
 		return root;
@@ -253,12 +252,10 @@ public class Main extends Application {
 	 * message. Calls to reload the game.
 	 */
 	public static void gameOver() {
-
-		Image mine = new Image("application/mine.png");
-		
-		AudioClip explosionSound = new AudioClip(new File("src/application/explosion.mp3").toURI().toString());
-		explosionSound.play();
-
+		if (sound) {
+			AudioClip explosion = new AudioClip(Main.class.getResource("explosion.mp3").toString());
+			explosion.play();
+		}
 		for (int y = 0; y < gridSize; y++) {
 			for (int x = 0; x < gridSize; x++) {
 				if (grid[x][y].hasBomb) {
@@ -274,17 +271,20 @@ public class Main extends Application {
 		gameOver.setContentText(
 				"Oh no! You clicked on a bomb and caused all the bombs to explode! Better luck next time.");
 		gameOver.showAndWait();
+
 		reload();
+
 	}
 
 	/**
 	 * Player win. Displays message. Calls to reload the game.
 	 */
 	public static void win() {
-		
-		AudioClip winSound = new AudioClip(new File("src/application/win.mp3").toURI().toString());
-		winSound.play();
 
+		if (sound) {
+			AudioClip winSound = new AudioClip(Main.class.getResource("win.mp3").toString());
+			winSound.play();
+		}
 		Alert win = new Alert(AlertType.CONFIRMATION);
 		win.setTitle("Win!");
 		win.setHeaderText("Congratulations!");
